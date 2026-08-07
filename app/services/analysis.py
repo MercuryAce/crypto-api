@@ -184,6 +184,7 @@ def run_analysis(
             "residual_std": rel["residual_std"],
             "tracking_error": stats.tracking_error(r_a, r_b),
             "cum_relative_return": stats.cum_relative_return(ca, cb),
+            "inference": stats.inferential_summary(r_a, r_b),
         },
         "series": {
             "dates": dates,
