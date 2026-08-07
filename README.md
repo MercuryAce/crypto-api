@@ -12,6 +12,9 @@ cp .env.example .env
 alembic revision --autogenerate -m "initial schema"
 alembic upgrade head
 PYTHONPATH=. python scripts/seed_registry.py
+# top 100 by market cap (CoinGecko) → Binance USDT pairs + gold/silver:
+PYTHONPATH=. python scripts/seed_registry.py --limit 100
+PYTHONPATH=. python scripts/seed_registry.py --limit 100 --dry-run
 ```
 
 ## Run
