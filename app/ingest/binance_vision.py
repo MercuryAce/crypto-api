@@ -38,18 +38,21 @@ def fetch_daily_bars(symbol: str, day: date) -> list[dict]:
 
     rows = []
     for _, r in df.iterrows():
-        ts = datetime.fromtimestamp(r["open_time"] / 1000, tz=timezone.utc)
-        rows.append({
-            "symbol": symbol.upper(),
-            "timestamp": ts,
-            "interval": "1d",
-            "open_": float(r["open"]),
-            "high": float(r["high"]),
-            "low": float(r["low"]),
-            "close": float(r["close"]),
-            "volume": float(r["volume"]),
-            "source": "binance_vision",
-        })
+        try:
+            ts = _open_time_to_datetime(r["open_time"])
+            rows.append({
+                "symbol": symbol.upper(),
+                "timestamp": ts,
+                "interval": "1d",
+                "open_": float(r["open"]),
+                "high": float(r["high"]),
+                "low": float(r["low"]),
+                "close": float(r["close"]),
+                "volume": float(r["volume"]),
+                "source": "binance_vision",
+            })
+        except (ValueError, OverflowError, TypeError):
+            continue
     return rows
 
 def upsert_bars(db: Session, bars: list[dict]) -> int:
@@ -85,3 +88,9 @@ def ingest_symbol_range(db: Session, symbol: str, start: date, end: date) -> int
         total += ingest_symbol_day(db, symbol, day)
         day += timedelta(days=1)
     return total
+
+def _open_time_to_datetime(raw) -> datetime:
+    v = int(float(raw))
+    if v >= 10**14: # BV microseconds format
+        v //= 1000  # -> milliseconds
+    return datetime.fromtimestamp(v / 1000, tz=timezone.utc)
