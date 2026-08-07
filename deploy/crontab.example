@@ -1,0 +1,1 @@
+# 15 1 * * * cd /opt/cryptoapi && .venv/bin/python scripts/daily_ingest.py >> /var/log/cryptoapi/ingest.log 2>&1

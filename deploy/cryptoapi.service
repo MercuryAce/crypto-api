@@ -1,0 +1,13 @@
+[Unit]
+Description=CryptoAPI
+After=network.target postgresql.service
+
+[Service]
+User=cryptoapi
+WorkingDirectory=/opt/cryptoapi
+EnvironmentFile=/opt/cryptoapi/.env
+ExecStart=/opt/cryptoapi/.venv/bin/gunicorn main:app -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8080
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
