@@ -44,7 +44,8 @@ def history_to_bars(payload: dict, *, av_symbol: str) -> list[dict]:
         if not isinstance(obs, dict):
             continue
         day_raw = obs.get("date")
-        value = obs.get("value")
+        # AV JSON uses "price"; some docs/examples use "value"
+        value = obs.get("price", obs.get("value"))
         if not day_raw or value in (None, "", "."):
             continue
         try:
@@ -77,6 +78,14 @@ def ingest_metal_history(
     """Fetch AV history for one metal and upsert daily bars."""
     payload = av_client.get_gold_silver_history(av_symbol, interval=interval)
     bars = history_to_bars(payload, av_symbol=av_symbol)
+    if not bars:
+        keys = list(payload.keys()) if isinstance(payload, dict) else []
+        sample = payload.get("data", [])[:1] if isinstance(payload, dict) else []
+        raise ValueError(
+            f"No bars parsed for {av_symbol}; response keys={keys!r}, "
+            f"data_len={len(payload.get('data', [])) if isinstance(payload, dict) else 0}, "
+            f"sample={sample!r}"
+        )
     count = upsert_bars(db, bars)
 
     bar_symbol = AV_TO_BAR_SYMBOL[av_symbol.upper()]

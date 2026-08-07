@@ -34,6 +34,7 @@ def get_gold_silver_history(
         "function": "GOLD_SILVER_HISTORY",
         "symbol": symbol.upper(),
         "interval": interval,
+        "datatype": "json",
         "apikey": settings.alphavantage_api_key,
     }
     if settings.alphavantage_base_url:

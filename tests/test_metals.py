@@ -4,13 +4,11 @@ from app.ingest.metals import history_to_bars
 
 
 SAMPLE_PAYLOAD = {
-    "name": "Gold",
-    "interval": "daily",
-    "unit": "USD per troy ounce",
+    "nominal": "XAUUSD",
     "data": [
-        {"date": "2026-08-05", "value": "2650.12"},
-        {"date": "2026-08-06", "value": "2660.00"},
-        {"date": "2026-08-07", "value": "."},
+        {"date": "2026-08-05", "price": "2650.12"},
+        {"date": "2026-08-06", "price": "2660.00"},
+        {"date": "2026-08-07", "price": "."},
     ],
 }
 

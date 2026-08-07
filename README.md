@@ -45,3 +45,28 @@ curl -H "X-API-Key: YOUR_KEY" "http://127.0.0.1:8080/v1/analysis?asset=bitcoin&v
 ```bash
 PYTHONPATH=. pytest tests/ -q
 ```
+
+## Troubleshooting
+
+### `PermissionError: Permission denied: '.env'`
+
+The service user (`cryptoapi`) often owns `/opt/cryptoapi/.env` with mode `600`. Your login user cannot read it.
+
+**Option A — run ingest as the service user (recommended):**
+```bash
+sudo -u cryptoapi bash -c 'cd /opt/cryptoapi && PYTHONPATH=. venv/bin/python scripts/backfill_metals.py'
+```
+
+**Option B — allow your user to read `.env`:**
+```bash
+sudo chown cryptoapi:cryptoapi /opt/cryptoapi/.env
+sudo chmod 640 /opt/cryptoapi/.env
+sudo usermod -aG cryptoapi "$USER"   # log out/in for group to apply
+```
+
+**Option C — export required vars** (if `.env` is unreadable, settings fall back to the shell environment):
+```bash
+export DATABASE_URL=postgresql+psycopg://...
+export ALPHAVANTAGE_API_KEY=...
+cd /opt/cryptoapi && PYTHONPATH=. venv/bin/python scripts/backfill_metals.py
+```
