@@ -1,1 +1,2 @@
-# 15 1 * * * cd /opt/cryptoapi && .venv/bin/python scripts/daily_ingest.py >> /var/log/cryptoapi/ingest.log 2>&1
+# Binance spot klines (yesterday) + Alpha Vantage gold/silver refresh
+# 15 1 * * * cd /opt/cryptoapi && PYTHONPATH=. .venv/bin/python scripts/daily_ingest.py >> /var/log/cryptoapi/ingest.log 2>&1

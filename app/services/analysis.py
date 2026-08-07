@@ -104,7 +104,7 @@ def run_analysis(
     db: Session,
     *,
     asset: str,
-    vs: str = "ethereum",
+    vs: str = "gold",
     window: int = 90,
     interval: str = "1d",
 ) -> dict:
@@ -127,16 +127,6 @@ def run_analysis(
             interval=interval,
         )
 
-    if asset_ref.binance_symbol in {"GOLD", "SILVER"}:
-        return _unavailable(
-            reason="baseline_not_available",
-            asset=asset,
-            vs=vs,
-            window=window,
-            interval=interval,
-            asset_ref=asset_ref,
-        )
-
     baseline_ref = resolve_binance_symbol(db, vs)
     if baseline_ref is None:
         return _unavailable(
@@ -146,17 +136,6 @@ def run_analysis(
             window=window,
             interval=interval,
             asset_ref=asset_ref,
-        )
-
-    if baseline_ref.binance_symbol in {"GOLD", "SILVER"}:
-        return _unavailable(
-            reason="baseline_not_available",
-            asset=asset,
-            vs=vs,
-            window=window,
-            interval=interval,
-            asset_ref=asset_ref,
-            baseline_ref=baseline_ref,
         )
 
     dates_a, closes_a = load_closes(db, asset_ref.binance_symbol, interval=interval, window_days=window)

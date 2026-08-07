@@ -15,6 +15,10 @@ class Settings(BaseSettings):
     port: int = 8080
     rate_limit: str = "100/minute"
 
+    alphavantage_api_key: str = ""
+    alphavantage_base_url: str = "https://www.alphavantage.co/query"
+    alphavantage_request_timeout: float = 30.0
+
     @property
     def api_key_set(self) -> set[str]:
         return {k.strip() for k in self.api_keys.split(",") if k.strip()}

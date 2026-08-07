@@ -14,7 +14,7 @@ app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.add_middleware(SlowAPIMiddleware)
 
-app.include_router(health.router)
+app.include_router(health.router, prefix="/v1")
 app.include_router(bars.router, prefix="/v1")
 app.include_router(analysis.router, prefix="/v1")
 

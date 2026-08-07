@@ -4,6 +4,8 @@ from app.db.session import SessionLocal
 SEED = [
     ("bitcoin", "btc", "BTCUSDT"),
     ("ethereum", "eth", "ETHUSDT"),
+    ("gold", "xau", "GOLD"),
+    ("silver", "xag", "SILVER"),
 ]
 
 def main():

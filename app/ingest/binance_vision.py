@@ -4,10 +4,10 @@ from datetime import date, datetime, timedelta, timezone
 
 import httpx
 import pandas as pd
-from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
-from app.db.models import IngestState, OHLCVBar
+from app.db.models import IngestState
+from app.ingest.store import upsert_bars
 
 BASE_URL = "https://data.binance.vision/data/spot/daily/klines"
 
@@ -54,17 +54,6 @@ def fetch_daily_bars(symbol: str, day: date) -> list[dict]:
         except (ValueError, OverflowError, TypeError):
             continue
     return rows
-
-def upsert_bars(db: Session, bars: list[dict]) -> int:
-    if not bars:
-        return 0
-    stmt = insert(OHLCVBar).values(bars)
-    stmt.on_conflict_do_nothing(
-        index_elements=["symbol", "timestamp", "interval"],
-    )
-    result = db.execute(stmt)
-    db.commit()
-    return result.rowcount or 0
 
 def ingest_symbol_day(db: Session, symbol: str, day: date) -> int:
     bars = fetch_daily_bars(symbol, day)
