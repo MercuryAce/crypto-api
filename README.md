@@ -15,6 +15,9 @@ PYTHONPATH=. python scripts/seed_registry.py
 # top 100 by market cap (CoinGecko) → Binance USDT pairs + gold/silver:
 PYTHONPATH=. python scripts/seed_registry.py --limit 100
 PYTHONPATH=. python scripts/seed_registry.py --limit 100 --dry-run
+# skipped coins + suggested Binance pairs (write override template):
+PYTHONPATH=. python scripts/seed_registry.py --limit 100 --report-skipped --skipped-out skipped_top100.json
+PYTHONPATH=. python scripts/seed_registry.py --limit 100 --overrides registry_overrides.json
 ```
 
 ## Run
